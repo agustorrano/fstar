@@ -63,8 +63,8 @@ Opción 2 - Instalación nativa
 =============================
 
 Descargá el release
-[v2024.08.14](https://github.com/FStarLang/FStar/releases/tag/v2024.08.1
-4) de F\* correspondiente a tu sistema operativo. Esto incluye un
+[v2024.08.14](https://github.com/FStarLang/FStar/releases/tag/v2024.08.14)
+de F\* correspondiente a tu sistema operativo. Esto incluye un
 binario `fstar.exe`, un binario `z3`, entre otras cosas. Luego, agregá
 el directorio `bin/` del release a tu `PATH`.
 

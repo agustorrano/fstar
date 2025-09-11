@@ -42,7 +42,7 @@ dep.pdf: dep.graph
 # to .depend.mk. It includes not only the corresponding .checked for
 # every root file, but also the .checked for files that are behind and
 # interface, such as LLib.fst in this example.
-# 
+#
 # This rule must be defined after including .depend.mk so the variable
 # is properly defined.
 verify-all: $(ALL_CHECKED_FILES)

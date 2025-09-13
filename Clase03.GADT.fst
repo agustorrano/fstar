@@ -20,6 +20,13 @@ let lift (ty : l_ty) : Type =
 
 val eval (#ty:l_ty) (e : expr ty) : Tot (lift ty)
 
-let rec eval (#ty:l_ty) (e : expr ty) : Tot (lift ty) =
-  admit()
-  (* Completar *)
+let rec eval (#ty:l_ty) (e : expr ty) : Tot (lift ty) (decreases e) =
+  match e with
+  | EInt n -> n
+  | EBool b -> b
+  | EAdd e1 e2 -> (eval e1) + (eval e2)
+  | EEq e1 e2 -> e1 = e2
+  | EIf b e1 e2 -> 
+    if (eval b) 
+    then (eval e1) 
+    else (eval e2)

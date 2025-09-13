@@ -265,6 +265,8 @@ let ley_impl1 (p q : Type) : (p -> q) -> oo (no p) q =
   // p -> q ==> ¬p \/ q
   admit()
 
+(* no se puede en lógica intuicionista porque se debe asumir p \/ ¬p *)
+
 (* Ejercicio. ¿Se puede en lógica intuicionista? *)
 let ley_impl2 (p q : Type) : oo (no p) q -> (p -> q) =
   // ¬p \/ q ==> p -> q
@@ -276,6 +278,8 @@ let ley_impl2 (p q : Type) : oo (no p) q -> (p -> q) =
 let ley_impl3 (p q : Type) : no (p -> q) -> yy p (no q) =
   // ¬(p -> q) ==> p /\ ¬q
   admit()
+
+(* no se puede en lógica intuicionista porque se debe asumir p \/ ¬p *)
 
 (* Ejercicio. ¿Se puede en lógica intuicionista? *)
 let ley_impl4 (p q : Type) : yy p (no q) -> no (p -> q) =
@@ -311,9 +315,16 @@ o demuestre que implica el tercero excluido para demostrar que
 es clásica. *)
 
 type peirce = (#a:Type) -> (#b:Type) -> ((a -> b) -> a) -> a
+// ((p -> q) -> p) -> p
 
 let lte_implica_peirce (lte : tercero_excluido) : peirce =
-  admit()
+  fun #a #b pp ->
+    match lte a with
+    | Inl a -> a
+    | Inr na -> pp na
 
 let peirce_implica_lte (pp : peirce) : tercero_excluido =
-  admit()
+  fun a ->
+    let f (nlte : no (oo a (no a))) : oo a (no a) =
+      Inr (fst (demorgan2_vuelta nlte))
+    in pp f

@@ -93,7 +93,7 @@ let rec last #a (xs : list a{Cons? xs}) : a =
 let rec sum' (xs:list int) : Tot int =
   (* Por qué *no* se acepta esta función? Termina? *)
   (* porque f* no tiene forma de deducirlo, para él init xs retorna una lista de una
-  longitud arbitraria, pero no garantiza que se menos que la longitud de xs *)
+  longitud arbitraria, pero no garantiza que se menos que la longitud de xs. termina *)
   if Nil? xs
   then 0
   else last xs + sum' (init xs)

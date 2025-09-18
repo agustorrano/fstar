@@ -321,10 +321,25 @@ let lte_implica_peirce (lte : tercero_excluido) : peirce =
   fun #a #b pp ->
     match lte a with
     | Inl a -> a
-    | Inr na -> pp na
+    | Inr na -> 
+      let f : (a -> b) = fun a -> ex_falso (na a)
+      in pp f
 
 let peirce_implica_lte (pp : peirce) : tercero_excluido =
   fun a ->
     let f (nlte : no (oo a (no a))) : oo a (no a) =
       Inr (fst (demorgan2_vuelta nlte))
     in pp f
+
+let peirce_implica_lte' (pp : peirce) : tercero_excluido =
+  fun a ->
+    let mi_pierce :
+      (((oo a (no a)) -> falso) -> oo a (no a)) 
+        -> oo a (no a) = pp #(oo a (no a)) #falso 
+    in 
+    let f : ((oo a (no a)) -> falso) -> oo a (no a) =
+      fun no_a_o_no_a ->
+        let pf : yy (no a) (no (no a)) = demorgan2_vuelta no_a_o_no_a
+        in ex_falso ((snd pf) (fst pf))
+    in 
+    mi_pierce f

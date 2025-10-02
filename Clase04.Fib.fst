@@ -75,3 +75,4 @@ let rec fib_tail'_ok (i : nat) (n : nat)
 let fib_tail_ok (n:nat) : Lemma (fib_tail n == fib n) =
   if n = 0 then ()
   else fib_tail'_ok 0 n
+

@@ -1,4 +1,4 @@
-module Clase5.Fib
+module Clase04.Fib
 
 (* Hace que '*' sea la multiplicación de enteros, en vez del constructor de tuplas. *)
 open FStar.Mul
@@ -33,8 +33,9 @@ let rec triang (n:nat) : int =
 // 101 + 101 + ... + 101 = 101 * 100
 // suma = 101 * 100 / 2 = 5050
 (* https://en.wikipedia.org/wiki/Arithmetic_progression#History *)
-let gauss (n:nat) : Lemma (triang n == n * (1 + n) / 2) =
-  admit()
+let rec gauss (n:nat) : Lemma (triang n == n * (1 + n) / 2) =
+  if n = 0 then ()
+  else gauss (n - 1)
 
 let rec fib (x:nat) : nat =
   if x = 0 then 1
@@ -49,9 +50,13 @@ let rec fib_lin' (x:nat) : (int & int) =
       (b, a + b)
 let fib_lin (n:nat) : int = fst (fib_lin' n)
 
+let rec fib_lin_aux (n:nat) : Lemma (fib_lin' n == (fib n, fib (n + 1))) =
+  if n = 0 then ()
+  else fib_lin_aux (n - 1)
+
 (* Demuestre que es correcta. *)
 let fib_lin_ok (n:nat) : Lemma (fib_lin n == fib n) =
-  admit()
+  fib_lin_aux n
 
 (* Fibonacci en tiempo lineal con recursión de cola (esencialmente
 un bucle while). *)
@@ -63,4 +68,3 @@ let fib_tail (n:nat) : nat = fib_tail' 1 1 n
 (* Demuestre que es correcta. Va a necesitar un lema auxiliar para fib_tail'. *)
 let fib_tail_ok (n:nat) : Lemma (fib_tail n == fib n) =
   admit()
-

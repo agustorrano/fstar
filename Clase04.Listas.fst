@@ -1,4 +1,4 @@
-module Clase5.Listas
+module Clase04.Listas
 
 open FStar.List.Tot
 
@@ -11,12 +11,16 @@ let rec sum_int xs =
 (* Demuestre que sum_int "distribuye" sobre la concatenación de listas. *)
 let rec sum_append (l1 l2 : list int)
   : Lemma (sum_int (l1 @ l2) == sum_int l1 + sum_int l2)
-  = admit()
+  = match l1 with
+    | [] -> ()
+    | x::xs -> sum_append xs l2 
 
 (* Idem para length, definida en la librería de F*. *)
 let rec len_append (l1 l2 : list int)
   : Lemma (length (l1 @ l2) == length l1 + length l2)
-  = admit()
+  = match l1 with
+    | [] -> ()
+    | x::xs -> len_append xs l2 
 
 let rec snoc (xs : list int) (x : int) : list int =
   match xs with

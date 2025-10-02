@@ -34,13 +34,16 @@ let rec eval (#ty:l_ty) (e : expr ty) : Tot (lift ty) (decreases e) =
 
 (* Optimización sobre expresionse MiniLang: constant folding *)
 let rec constant_fold (#ty:l_ty) (e : expr ty) : Tot (expr ty) (decreases e) =
+let rec constant_fold (#ty:l_ty) (e : expr ty) : Tot (expr ty) (decreases e) =
   match e with
   | EInt i -> EInt i
   | EBool b -> EBool b
   | EAdd (EInt m) (EInt n) -> EInt (m + n)
-  | EAdd l r -> EAdd (constant_fold l) (constant_fold r)
-  | EEq (EInt m) (EInt n) -> EBool (m = n)
-  | EEq l r -> EEq (constant_fold l) (constant_fold r)
+  | EEq m n ->
+    (match (constant_fold m, constant_fold n) with
+      | EInt m', EInt n' -> EBool (m' = n')
+      | _ -> EEq (constant_fold m) (constant_fold n)
+      )
   | EIf c t e ->
     let c' = constant_fold c in
     (match c' with
@@ -54,15 +57,12 @@ let rec constant_fold_ok (#ty:l_ty) (e : expr ty)
   : Lemma (ensures eval e == eval (constant_fold e)) (decreases e)
 =
   match e with
-  | EInt _ | EBool _ -> ()
-  | EAdd l r -> 
-    constant_fold_ok l; 
-    constant_fold_ok r
-  | EEq l r -> 
-    constant_fold_ok l; 
-    constant_fold_ok r
+  | EAdd m n -> constant_fold_ok m; constant_fold_ok n
+  | EEq m n -> constant_fold_ok m; constant_fold_ok n
   | EIf c t e -> 
     constant_fold_ok c;
-    constant_fold_ok t; 
-    constant_fold_ok e
+    (match constant_fold c with
+    | EBool true -> constant_fold_ok t
+    | EBool false -> constant_fold_ok e
+    | _ -> constant_fold_ok t; constant_fold_ok e)
   | _ -> ()

@@ -65,6 +65,13 @@ let rec fib_tail' (a b : nat) (n : nat) : Tot nat (decreases n) =
   else fib_tail' b (a + b) (n - 1)
 let fib_tail (n:nat) : nat = fib_tail' 1 1 n
 
+let rec fib_tail'_ok (i : nat) (n : nat)
+  : Lemma (ensures fib_tail' (fib i) (fib (i + 1)) n = fib (i + n)) 
+          (decreases n)
+= if n = 0 then ()
+  else fib_tail'_ok (i + 1) (n - 1)
+
 (* Demuestre que es correcta. Va a necesitar un lema auxiliar para fib_tail'. *)
 let fib_tail_ok (n:nat) : Lemma (fib_tail n == fib n) =
-  admit()
+  if n = 0 then ()
+  else fib_tail'_ok 0 n

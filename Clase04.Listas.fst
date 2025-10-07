@@ -36,14 +36,38 @@ let rec rev_int (xs : list int) : list int =
   | [] -> []
   | x::xs' -> snoc (rev_int xs') x
 
-let rev_append_int (xs ys : list int)
-  : Lemma (rev_int (xs @ ys) == rev_int ys @ rev_int xs)
-= admit()
+let rec snoc_append (xs ys : list int) (x : int)
+  : Lemma (snoc (xs @ ys) x == xs @ (snoc ys x))
+= match xs with
+  | [] -> ()
+  | x'::xs' -> snoc_append xs' ys x
 
-let rev_rev (xs : list int)
+let rec rev_append_int (xs ys : list int)
+  : Lemma (rev_int (xs @ ys) == rev_int ys @ rev_int xs)
+= match xs with
+  | [] -> ()
+  | x::xs' -> 
+    rev_append_int xs' ys;
+    snoc_append (rev_int ys) (rev_int xs') x
+
+let rec snoc_rev (xs : list int) (x : int)
+  : Lemma (rev_int (snoc xs x) == x::(rev_int xs))
+= match xs with
+  | [] -> ()
+  | x'::xs' -> snoc_rev xs' x
+
+let rec rev_rev (xs : list int)
   : Lemma (rev_int (rev_int xs) == xs)
-= admit()
+= match xs with
+  | [] -> ()
+  | x::xs' ->
+    rev_rev xs';
+    snoc_rev (rev_int xs') x
 
 let rev_injective (xs ys : list int)
   : Lemma (requires rev_int xs == rev_int ys) (ensures xs == ys)
-= admit()
+= match xs with
+  | [] -> ()
+  | x::xs' -> 
+    rev_rev xs;
+    rev_rev ys

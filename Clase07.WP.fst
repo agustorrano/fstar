@@ -244,10 +244,34 @@ let rec cwp_ok (p:stmt) (post : cond)
       in
       pf1
     
-    | Assign x e -> admit()
-    | IfZ c t e -> admit()
-    | Seq p q -> admit()
-    | Skip -> admit()
+    | Assign x e ->
+      // H_Assign #x #e #post <: hoare (cwp (Assign x e) post) p post
+      let pre = cwp p post in
+      let pf : hoare (fun s -> post (override s x (eval_expr s e))) p post = H_Assign #x #e #post in
+      let pf : hoare pre p post =
+        H_Weaken pre post pf () () 
+      in pf
+    | IfZ c t e -> 
+      let pf_t : hoare (cwp t post) t post = cwp_ok t post in
+      let pf_t : hoare (fun s -> cwp p post s /\ eval_expr s c == 0) t post = 
+        hoare_strengthen_pre _ _ _ _ _ pf_t in
+      let pf_e : hoare (cwp e post) e post = cwp_ok e post in
+      let pf_e : hoare (fun s -> cwp p post s /\ eval_expr s c <> 0) e post = 
+        hoare_strengthen_pre _ _ _ _ _ pf_e in
+      H_If pf_t pf_e
+    | Seq q r ->
+      let pre = cwp p post in
+      let pf_q : hoare (cwp q (cwp r post)) q (cwp r post) = cwp_ok q (cwp r post) in
+      let pf_q : hoare pre q (cwp r post) = 
+        H_Weaken pre (cwp r post) pf_q () () in
+      let pf_r : hoare (cwp r post) r post = cwp_ok r post in
+      H_Seq pf_q pf_r
+    | Skip -> // H_Skip post
+      let pre = cwp p post in
+      let pf : hoare post p post = H_Skip _ in
+      let pf : hoare pre p post =
+        H_Weaken pre post pf () () 
+      in pf
 
 (* Agregar 1 a x. *)
 let add1 =

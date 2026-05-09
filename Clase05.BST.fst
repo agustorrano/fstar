@@ -1,6 +1,5 @@
 module Clase05.BST
 
-open FStar.Mul
 open FStar.List.Tot
 open FStar.Ghost
 

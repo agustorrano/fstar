@@ -21,6 +21,7 @@ let lift (ty : l_ty) : Type =
   match ty with
   | Int -> int
   | Bool -> bool
+
 (* El evaluador intrínsecamente-tipado de MiniLang *)
 val eval (#ty:l_ty) (e : expr ty) : Tot (lift ty)
 let rec eval (#ty:l_ty) (e : expr ty) : Tot (lift ty) (decreases e) =
@@ -33,7 +34,6 @@ let rec eval (#ty:l_ty) (e : expr ty) : Tot (lift ty) (decreases e) =
     if eval c then eval t else eval e
 
 (* Optimización sobre expresionse MiniLang: constant folding *)
-let rec constant_fold (#ty:l_ty) (e : expr ty) : Tot (expr ty) (decreases e) =
 let rec constant_fold (#ty:l_ty) (e : expr ty) : Tot (expr ty) (decreases e) =
   match e with
   | EInt i -> EInt i

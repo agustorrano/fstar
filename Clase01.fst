@@ -1,8 +1,5 @@
 module Clase01
 
-(* Hace que '*' sea la multiplicación de enteros, en vez del constructor de tuplas. *)
-open FStar.Mul
-
 let suma (x y : int) : int = x + y
 
 (* Defina una función suma sobre naturales *)

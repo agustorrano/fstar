@@ -1,6 +1,4 @@
-	module Clase06.Imp
-
-open FStar.Mul
+module Clase06.Imp
 
 type var = string
 

@@ -1,7 +1,5 @@
 module Clase07.WP
 
-open FStar.Mul
-
 type var = string
 type state = var -> int
 type cond = state -> prop

@@ -172,13 +172,6 @@ let modus_tollens (#a #b : Type)
 
   (* Vale la recíproca? NO *)
 
-let modus_tollens' (#a #b : Type)
-  : (no b -> no a) -> (a -> b)
-=
-  fun nb_na a ->
-    let x : no (no b) = fun nb -> (nb_na nb) a in
-    admit() 
-
 [@@expect_failure]
 let modus_tollens2 (#a #b : Type)
   : (no b -> no a) -> (a -> b)
@@ -226,7 +219,7 @@ let demorgan1_ida (#a #b : Type) : oo (no a) (no b) -> no (yy a b) =
   | Inl no_a -> fun (a,_) -> no_a a
   | Inr no_b -> fun (_,b) -> no_b b
 
-(* no se si vale lado izq o der *)
+(* No es intuicionista *)
 let demorgan1_vuelta (#a #b : Type) : no (yy a b) -> oo (no a) (no b) =
   admit()
 
@@ -267,14 +260,14 @@ let ley_impl1 (p q : Type) : (p -> q) -> oo (no p) q =
 
 (* no se puede en lógica intuicionista porque se debe asumir p \/ ¬p *)
 
-(* Ejercicio. ¿Se puede en lógica intuicionista? *)
+(* Ejercicio. ¿Se puede en lógica intuicionista? NO *)
 let ley_impl2 (p q : Type) : oo (no p) q -> (p -> q) =
   // ¬p \/ q ==> p -> q
   function
   | Inl np -> (fun p -> np p)
   | Inr q -> (fun p -> q)
 
-(* Ejercicio. ¿Se puede en lógica intuicionista? *)
+(* Ejercicio. ¿Se puede en lógica intuicionista? NO *)
 let ley_impl3 (p q : Type) : no (p -> q) -> yy p (no q) =
   // ¬(p -> q) ==> p /\ ¬q
   admit()
